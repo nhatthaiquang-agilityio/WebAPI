@@ -33,13 +33,13 @@ stages:
         - task: VSBuild@1
           displayName: 'Build $(projectName)'
           inputs:
-            solution: 'WebAPI.\WebAPI.csproj'
+            solution: 'WebAPI\WebAPI.csproj'
             msbuildArgs: '/p:Configuration=$(buildConfiguration) /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:OutputPath="$(build.artifactstagingdirectory)\\" /p:autoparameterizationwebconfigconnectionstrings=false'
 
         - task: ArchiveFiles@2
           displayName: Zip Build Artifacts
           inputs:
-            rootFolderOrFile: WebAPI\obj\$(buildConfiguration)\Package
+            rootFolderOrFile: WebAPI\obj\$(buildConfiguration)\Package\PackageTmp
             includeRootFolder: false
             archiveFile: $(build.artifactstagingdirectory)/$(Build.BuildNumber).zip
 
@@ -71,12 +71,12 @@ stages:
                     archiveFilePatterns: '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber).zip'
                     destinationFolder: '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber)'
 
-                - task: FileTransform@2
-                  enabled: false
-                  displayName: 'Transform Web configuration for $(buildConfiguration)'
-                  inputs:
-                    folderPath: '$(build.artifactstagingdirectory)/**/*.Hosted.zip'
-                    xmlTransformationRules: '-transform **\Web.$(buildConfiguration).config -xml **\Web.config'
+                # - task: FileTransform@2
+                #   enabled: false
+                #   displayName: 'Transform Web configuration for $(buildConfiguration)'
+                #   inputs:
+                #     folderPath: '$(build.artifactstagingdirectory)/**/*.zip'
+                #     xmlTransformationRules: '-transform **\Web.$(buildConfiguration).config -xml **\Web.config'
 
                 - task: IISWebAppManagementOnMachineGroup@0
                   displayName: IIS Web Application Manage
