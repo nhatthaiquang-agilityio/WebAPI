@@ -107,21 +107,6 @@ jobs:
       env:
         SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;'
 
-    - name: Zip artifact for deployment
-      run: zip WebAPI.zip ${{ env.physical_path }}/* -r
-
-    # - name: Deploy WebAPI with PowerShell
-    #   uses: nhatthai/deploy-iis@main
-    #   with:
-    #     server: '${{ env.IIS_SERVER_COMPUTER_NAME }}'
-    #     app_name: '${{ env.app_name }}'
-    #     app_pool_name: '${{ env.app_pool_name }}'
-    #     physical_path: '${{ env.physical_path }}'
-    #     deploy_user_id: '${{ env.IIS_SERVER_USERNAME }}'
-    #     deploy_user_secret: '${{ env.IIS_SERVER_PASSWORD }}'
-    #     website_name: '${{ env.IIS_WEBSITE_NAME }}'
-    #     app_pool_user_service: '${{ env.app_pool_user_service }}'
-    #     app_pool_password_service: '${{ env.app_pool_password_service }}'
     - name: Deploy WebAPI with MSDeploy
       run: |
         '"C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync \
