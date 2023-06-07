@@ -67,8 +67,8 @@ jobs:
       with:
         files: '["${{ env.physical_path }}\WebAPI\parameters.xml"]'
       env:
-        SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;
-        #OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service'
+        #SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;
+        OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service'
 
     - name: Deploy WebAPI with PowerShell
       uses: nhatthai/deploy-iis@main
