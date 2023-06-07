@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
     - uses: actions/checkout@v2
 
@@ -38,6 +37,7 @@ jobs:
         name: WebAPI
         path: "./_build"
         #path: bin\Release\Publish
+
   deploy:
     needs: build
     runs-on: self-hosted
@@ -55,6 +55,7 @@ jobs:
     environment:
       name: Test
 
+    steps:
     - name: Remove Build Artifact ${{ inputs.package-path }} if exist
       shell: powershell
       run: |
