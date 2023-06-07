@@ -56,13 +56,6 @@ jobs:
       name: Test
 
     steps:
-    - name: Remove Build Artifact ${{ inputs.package-path }} if exist
-      shell: powershell
-      run: |
-        if ( Test-Path ${{ inputs.package-path }} ) {
-          Remove-Item ${{ inputs.package-path }} -Recurse -Force
-        }
-
     - name: Download Build Artifact
       uses: actions/download-artifact@v3
       with:
