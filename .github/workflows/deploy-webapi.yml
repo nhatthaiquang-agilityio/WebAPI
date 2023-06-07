@@ -47,7 +47,7 @@ jobs:
       physical_path: 'D:\deployments\WebAPI'
       IIS_WEBSITE_NAME: 'Default Web Site'
       IIS_SERVER_COMPUTER_NAME: 'localhost'
-      IIS_SERVER_USERNAME: ${{ secrets.IIS_SERVER_USERNAME }}'RR613594'
+      IIS_SERVER_USERNAME: ${{ secrets.IIS_SERVER_USERNAME }}
       IIS_SERVER_PASSWORD: ${{ secrets.IIS_SERVER_PASSWORD }}
       app_pool_user_service: 'webapi'
       app_pool_password_service: 'Test1Testing'
