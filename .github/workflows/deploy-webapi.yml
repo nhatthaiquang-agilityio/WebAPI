@@ -65,7 +65,7 @@ jobs:
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.1
       with:
-        files: '["${{ env.physical_path }}\parameters.xml"]'
+        files: '["${{ env.physical_path }}\WebAPI\parameters.xml"]'
       env:
         SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;
         OnboardingWCFBasicHttpEndpointAddress: http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service
