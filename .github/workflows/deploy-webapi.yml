@@ -60,12 +60,12 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: ${{ inputs.artifact-name }}
-        path: ${{ inputs.package-path }}
+        path: ${{ env.physical_path }}
 
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.1
       with:
-        files: '["${{ inputs.artifact-name }}\parameters.xml"]'
+        files: '["${{ env.physical_path }}\parameters.xml"]'
       env:
         SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;
         OnboardingWCFBasicHttpEndpointAddress: http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service
