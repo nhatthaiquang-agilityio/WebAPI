@@ -86,24 +86,24 @@ jobs:
       uses: mingjun97/file-regex-replace@v1
       if: ${{ env.SessionStateSqlConnectionString != '' }}
       with:
-        regex: '${{ env.MatchSessionStateSql }}'
-        replacement: '${{ env.SessionStateSqlConnectionString }}'
+        regex: 'sqlConnectionString="${{ env.MatchSessionStateSql }}"'
+        replacement: 'sqlConnectionString="${{ env.SessionStateSqlConnectionString }}"'
         include: 'Web.config'
         path: '${{ env.physical_path }}\WebAPI'
       env:
-        SessionStateSqlConnectionString: 'sqlConnectionString="Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;"'
-        MatchSessionStateSql: 'sqlConnectionString="Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;"'
+        SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;'
+        MatchSessionStateSql: 'Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;"'
 
     - name: Replace value in parameters.xml
       uses: mingjun97/file-regex-replace@v1
-      if: ${{ env.OnboardingWCFBasicHttpEndpointAddress != '' }}
+      if: ${{ env.SessionStateSqlConnectionString != '' }}
       with:
         regex: 'defaultValue="#{SessionStateSqlConnectionString}#"'
         replacement: 'defaultValue="${{ env.SessionStateSqlConnectionString }}"'
         include: 'parameters.xml'
         path: '${{ env.physical_path }}\WebAPI'
       env:
-        SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;
+        SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;'
 
     - name: Deploy WebAPI with PowerShell
       uses: nhatthai/deploy-iis@main
