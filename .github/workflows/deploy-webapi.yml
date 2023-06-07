@@ -77,10 +77,21 @@ jobs:
         regex: 'address="${{ env.MatchWCFEndpoint }}"'
         replacement: 'address="${{ env.OnboardingWCFBasicHttpEndpointAddress }}"'
         include: 'Web.config'
-        path: '"${{ env.physical_path }}\WebAPI'
+        path: '${{ env.physical_path }}\WebAPI'
       env:
         OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service'
         MatchWCFEndpoint: 'http://rrwin-rpiwt1.fincoad.com:8000/RPDocumentBoarding/service'
+
+    - name: Replace value in parameters.xml
+      uses: mingjun97/file-regex-replace@v1
+      if: ${{ env.OnboardingWCFBasicHttpEndpointAddress != '' }}
+      with:
+        regex: 'defaultValue="#{SessionStateSqlConnectionString}#"'
+        replacement: 'defaultValue="${{ env.OnboardingWCFBasicHttpEndpointAddress }}"'
+        include: 'parameters.xml'
+        path: '${{ env.physical_path }}\WebAPI'
+      env:
+        SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;
 
     - name: Deploy WebAPI with PowerShell
       uses: nhatthai/deploy-iis@main
