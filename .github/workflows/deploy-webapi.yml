@@ -112,5 +112,5 @@ jobs:
         '"C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync \
         -source:contentPath="${{ env.physical_path }}\WebAPI" \
         -dest:contentPath="D:\wwwroot\WebAPI" \
-        -setParam:name='IIS Web Application Name',value='Default Web Site/webapi' \
-        -setParamFile=${{ env.physical_path }}\WebAPI\parameters.xml -enableRule:DoNotDeleteRule
+        -setParam:name="IIS Web Application Name",value="Default Web Site/webapi" \
+        -setParamFile="${{ env.physical_path }}\WebAPI\parameters.xml" -enableRule:DoNotDeleteRule
