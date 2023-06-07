@@ -46,7 +46,7 @@ jobs:
       app_pool_name: 'webapi-pool'
       physical_path: 'D:\deployments\WebAPI'
       IIS_WEBSITE_NAME: 'Default Web Site'
-      IIS_SERVER_COMPUTER_NAME: '127.0.0.1'
+      IIS_SERVER_COMPUTER_NAME: 'localhost'
       IIS_SERVER_USERNAME: 'Admin'
       IIS_SERVER_PASSWORD: 'Admin@123456'
       app_pool_user_service: 'webapi'
@@ -65,7 +65,7 @@ jobs:
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.1
       with:
-        files: '["${{ inputs.package-path }}\Web.config"]'
+        files: '["${{ inputs.package-path }}\parameters.xml"]'
       env:
         SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;
         OnboardingWCFBasicHttpEndpointAddress: http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service

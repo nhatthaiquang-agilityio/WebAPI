@@ -3,13 +3,13 @@
 	<parameter name="SessionStateSqlConnectionString"
 			   description="ConnectionString for Load Balanced SessionState"
 			   defaultValue="#{SessionStateSqlConnectionString}#">
-		<parameterEntry kind="XmlFile" scope="D:\\a\\1\\s\\Dfin\.RightProspectus\.Ingestor\.PresentationWeb\\obj\\Release\\Package\\PackageTmp\\Web\.config$"
+		<parameterEntry kind="XmlFile" scope="D:\\a\\1\\s\\WebAPI\\obj\\Release\\Package\\PackageTmp\\Web\.config$"
 						match="/configuration/system.web/sessionState/@sqlConnectionString" />
 	</parameter>
 	<parameter name="OnboardingWCFBasicHttpEndpointAddress"
 			   description="ConnectionString for Load Balanced SessionState"
 			   defaultValue="#{OnboardingWCFBasicHttpEndpointAddress}#">
-		<parameterEntry kind="XmlFile" scope="D:\\a\\1\\s\\Dfin\.RightProspectus\.Ingestor\.PresentationWeb\\obj\\Release\\Package\\PackageTmp\\Web\.config$"
+		<parameterEntry kind="XmlFile" scope="D:\\a\\1\\s\\WebAPI\\obj\\Release\\Package\\PackageTmp\\Web\.config$"
 						match="/configuration/system.serviceModel/client/endpoint[@name='BasicHttpBinding_IDocumentOnboardContract']/@address" />
 	</parameter>
 </parameters>
