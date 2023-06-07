@@ -62,39 +62,42 @@ jobs:
         name: ${{ inputs.artifact-name }}
         path: ${{ env.physical_path }}
 
-    # - name: Replace tokens
-    #   uses: cschleiden/replace-tokens@v1.1
+    # - name: Replace OnboardingWCFBasicHttp Endpoint Address in web.config
+    #   uses: mingjun97/file-regex-replace@v1
+    #   if: ${{ env.OnboardingWCFBasicHttpEndpointAddress != '' }}
     #   with:
-    #     files: '["${{ env.physical_path }}\WebAPI\parameters.xml"]'
+    #     regex: 'address="${{ env.MatchWCFEndpoint }}"'
+    #     replacement: 'address="${{ env.OnboardingWCFBasicHttpEndpointAddress }}"'
+    #     include: 'Web.config'
+    #     path: '${{ env.physical_path }}\WebAPI'
     #   env:
-    #     #SessionStateSqlConnectionString: Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;
     #     OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service'
+    #     MatchWCFEndpoint: 'http://rrwin-rpiwt1.fincoad.com:8000/RPDocumentBoarding/service'
 
-    - name: Replace OnboardingWCFBasicHttp Endpoint Address in web.config
+    # - name: Replace OnboardingWCFBasicHttp Endpoint Address in web.config
+    #   uses: mingjun97/file-regex-replace@v1
+    #   if: ${{ env.SessionStateSqlConnectionString != '' }}
+    #   with:
+    #     regex: 'sqlConnectionString="${{ env.MatchSessionStateSql }}"'
+    #     replacement: 'sqlConnectionString="${{ env.SessionStateSqlConnectionString }}"'
+    #     include: 'Web.config'
+    #     path: '${{ env.physical_path }}\WebAPI'
+    #   env:
+    #     SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;'
+    #     MatchSessionStateSql: 'Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;'
+
+    - name: Replace OnboardingWCFBasicHttpEndpointAddress value in parameters.xml
       uses: mingjun97/file-regex-replace@v1
       if: ${{ env.OnboardingWCFBasicHttpEndpointAddress != '' }}
       with:
-        regex: 'address="${{ env.MatchWCFEndpoint }}"'
-        replacement: 'address="${{ env.OnboardingWCFBasicHttpEndpointAddress }}"'
-        include: 'Web.config'
+        regex: 'defaultValue="#{OnboardingWCFBasicHttpEndpointAddress}#"'
+        replacement: 'defaultValue="${{ env.OnboardingWCFBasicHttpEndpointAddress }}"'
+        include: 'parameters.xml'
         path: '${{ env.physical_path }}\WebAPI'
       env:
-        OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service'
-        MatchWCFEndpoint: 'http://rrwin-rpiwt1.fincoad.com:8000/RPDocumentBoarding/service'
+        OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1.fincoad.com:8000/RPDocumentBoarding/service'
 
-    - name: Replace OnboardingWCFBasicHttp Endpoint Address in web.config
-      uses: mingjun97/file-regex-replace@v1
-      if: ${{ env.SessionStateSqlConnectionString != '' }}
-      with:
-        regex: 'sqlConnectionString="${{ env.MatchSessionStateSql }}"'
-        replacement: 'sqlConnectionString="${{ env.SessionStateSqlConnectionString }}"'
-        include: 'Web.config'
-        path: '${{ env.physical_path }}\WebAPI'
-      env:
-        SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;'
-        MatchSessionStateSql: 'Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;"'
-
-    - name: Replace value in parameters.xml
+    - name: Replace SessionStateSqlConnectionString value in parameters.xml
       uses: mingjun97/file-regex-replace@v1
       if: ${{ env.SessionStateSqlConnectionString != '' }}
       with:
@@ -105,15 +108,21 @@ jobs:
       env:
         SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;'
 
-    - name: Deploy WebAPI with PowerShell
-      uses: nhatthai/deploy-iis@main
-      with:
-        server: '${{ env.IIS_SERVER_COMPUTER_NAME }}'
-        app_name: '${{ env.app_name }}'
-        app_pool_name: '${{ env.app_pool_name }}'
-        physical_path: '${{ env.physical_path }}'
-        deploy_user_id: '${{ env.IIS_SERVER_USERNAME }}'
-        deploy_user_secret: '${{ env.IIS_SERVER_PASSWORD }}'
-        website_name: '${{ env.IIS_WEBSITE_NAME }}'
-        app_pool_user_service: '${{ env.app_pool_user_service }}'
-        app_pool_password_service: '${{ env.app_pool_password_service }}'
+    # - name: Deploy WebAPI with PowerShell
+    #   uses: nhatthai/deploy-iis@main
+    #   with:
+    #     server: '${{ env.IIS_SERVER_COMPUTER_NAME }}'
+    #     app_name: '${{ env.app_name }}'
+    #     app_pool_name: '${{ env.app_pool_name }}'
+    #     physical_path: '${{ env.physical_path }}'
+    #     deploy_user_id: '${{ env.IIS_SERVER_USERNAME }}'
+    #     deploy_user_secret: '${{ env.IIS_SERVER_PASSWORD }}'
+    #     website_name: '${{ env.IIS_WEBSITE_NAME }}'
+    #     app_pool_user_service: '${{ env.app_pool_user_service }}'
+    #     app_pool_password_service: '${{ env.app_pool_password_service }}'
+    - name: Deploy WebAPI with MSDeploy
+      run: |
+        '"C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync \
+        -source:package='${{ env.physical_path }}\WebAPI' \
+        -dest:auto -setParam:name='IIS Web Application Name',value='Default Web Site/pcweb' \
+        -setParamFile=${{ env.physical_path }}\WebAPI\parameters.xml -enableRule:DoNotDeleteRule
