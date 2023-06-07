@@ -95,7 +95,7 @@ jobs:
         include: 'parameters.xml'
         path: '${{ env.physical_path }}\WebAPI'
       env:
-        OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1.fincoad.com:8000/RPDocumentBoarding/service'
+        OnboardingWCFBasicHttpEndpointAddress: 'http://rrwin-rpiwt1testing.fincoad.com:8000/RPDocumentBoarding/service'
 
     - name: Replace SessionStateSqlConnectionString value in parameters.xml
       uses: mingjun97/file-regex-replace@v1
@@ -107,6 +107,9 @@ jobs:
         path: '${{ env.physical_path }}\WebAPI'
       env:
         SessionStateSqlConnectionString: 'Data Source=FWTAXD-SQLT001.fincoad.com\\sql003;Initial Catalog=db1029;Integrated Security=True;'
+
+    - name: Zip artifact for deployment
+      run: zip WebAPI.zip ${{ env.physical_path }}/* -r
 
     # - name: Deploy WebAPI with PowerShell
     #   uses: nhatthai/deploy-iis@main
@@ -123,6 +126,6 @@ jobs:
     - name: Deploy WebAPI with MSDeploy
       run: |
         '"C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync \
-        -source:package='${{ env.physical_path }}\WebAPI' \
-        -dest:auto -setParam:name='IIS Web Application Name',value='Default Web Site/pcweb' \
+        -source:package='${{ env.physical_path }}\WebAPI.zip' \
+        -dest:auto -setParam:name='IIS Web Application Name',value='Default Web Site/webapi' \
         -setParamFile=${{ env.physical_path }}\WebAPI\parameters.xml -enableRule:DoNotDeleteRule
