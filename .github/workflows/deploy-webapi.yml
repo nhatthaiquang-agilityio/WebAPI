@@ -36,7 +36,6 @@ jobs:
       with:
         name: WebAPI
         path: "./_build"
-        #path: bin\Release\Publish
 
   deploy:
     needs: build
@@ -126,6 +125,7 @@ jobs:
     - name: Deploy WebAPI with MSDeploy
       run: |
         '"C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync \
-        -source:package='${{ env.physical_path }}\WebAPI.zip' \
-        -dest:auto -setParam:name='IIS Web Application Name',value='Default Web Site/webapi' \
+        -source:contentPath='${{ env.physical_path }}\WebAPI \
+        -dest:contentPath="D:\wwwroot\WebAPI" \
+        -setParam:name='IIS Web Application Name',value='Default Web Site/webapi' \
         -setParamFile=${{ env.physical_path }}\WebAPI\parameters.xml -enableRule:DoNotDeleteRule
