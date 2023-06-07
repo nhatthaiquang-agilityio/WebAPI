@@ -1,0 +1,90 @@
+name: Build and deploy WebAPI .Net Framework 4.8 on self host
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE
+
+    - name: Create Build Directory
+      run: mkdir _build
+
+    - name: Restore Packages
+      run: nuget restore WebAPI.sln
+
+    - name: Build Solution
+      run: |
+        msbuild.exe WebAPI.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: WebAPI
+        path: "./_build"
+        #path: bin\Release\Publish
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    env:
+      app_name: 'webapi'
+      app_pool_name: 'webapi-pool'
+      physical_path: 'D:\deployments\WebAPI'
+      IIS_WEBSITE_NAME: 'Default Web Site'
+      IIS_SERVER_COMPUTER_NAME: '127.0.0.1'
+      #IIS_SERVER_USERNAME: 'Administrator'
+      #IIS_SERVER_PASSWORD: '${{ secrets.IIS_SERVER_PASSWORD }}'
+      app_pool_user_service: 'webapi'
+      app_pool_password_service: 'Test1Testing'
+      source_physical_path: 'D:\deployments\'
+    environment:
+      name: Test
+
+    - name: Remove Build Artifact ${{ inputs.package-path }} if exist
+      shell: powershell
+      run: |
+        if ( Test-Path ${{ inputs.package-path }} ) {
+          Remove-Item ${{ inputs.package-path }} -Recurse -Force
+        }
+
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.package-path }}
+
+    - name: Replace tokens
+      uses: cschleiden/replace-tokens@v1.1
+      with:
+        files: '["${{ inputs.package-path }}\Web.config"]'
+      env:
+        SessionStateSqlConnectionString: "Data Source=FWTAXD-SQLT001.fincoad.com\sql003;Initial Catalog=db1029;Integrated Security=True;"
+        OnboardingWCFBasicHttpEndpointAddress: "http://rrwin-rpiwt1test.fincoad.com:8000/RPDocumentBoarding/service"
+
+    - name: Deploy WebAPI with PowerShell
+      uses: nhatthai/deploy-iis@main
+      with:
+        server: '${{ env.IIS_SERVER_COMPUTER_NAME }}'
+        app_name: '${{ env.app_name }}'
+        app_pool_name: '${{ env.app_pool_name }}'
+        physical_path: '${{ env.physical_path }}'
+        deploy_user_id: ''
+        deploy_user_secret: ''
+        website_name: '${{ env.IIS_WEBSITE_NAME }}'
+        app_pool_user_service: '${{ env.app_pool_user_service }}'
+        app_pool_password_service: '${{ env.app_pool_password_service }}'
