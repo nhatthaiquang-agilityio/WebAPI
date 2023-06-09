@@ -1,5 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <parameters>
+	<setParameter
+    	name="IIS Web Application Name"
+    	value="Default Web Site/ContactManager.Mvc_deploy" />
+
 	<parameter name="SessionStateSqlConnectionString"
 			   description="ConnectionString for Load Balanced SessionState"
 			   defaultValue="#{SessionStateSqlConnectionString}#">
