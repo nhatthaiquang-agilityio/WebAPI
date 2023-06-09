@@ -27,7 +27,7 @@ jobs:
     - name: Restore Packages
       run: nuget restore WebAPI.sln
 
-    - name: Build Solution
+    - name: Build UnitTest
       run: |
         msbuild.exe WebAPI.UnitTest\WebAPI.UnitTest.csproj /p:configuration="Release"
 
@@ -35,7 +35,7 @@ jobs:
       uses: microsoft/vstest-action@v1.0.0
       with:
         testAssembly: WebAPI.UnitTest.dll
-        searchFolder: .\WebAPI.UnitTest\bin\Debug\
+        searchFolder: .\WebAPI.UnitTest\bin\Release\
         runInParallel: true
 
     - name: Build Solution
