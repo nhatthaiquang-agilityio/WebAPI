@@ -77,5 +77,6 @@ jobs:
         cd "C:\Program Files\IIS\Microsoft Web Deploy V3\"
 
     - name: Deploy WebAPI with MSDeploy
+      shell: powershell
       run: |
         .\msdeploy.exe -verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule
