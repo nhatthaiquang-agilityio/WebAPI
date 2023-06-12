@@ -76,5 +76,5 @@ jobs:
       shell: powershell
       run: |
         $MsDeploy = 'C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe';
-        $ArgumentList = '-verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule';
+        $ArgumentList = '-verb:sync -source:iisApp="${{ env.physical_path }}\WebAPI" -dest:iisApp="Default Web Site\webapi" -enableRule:DoNotDeleteRule';
         Start-Process -FilePath $MsDeploy -ArgumentList $ArgumentList -Wait -NoNewWindow;
