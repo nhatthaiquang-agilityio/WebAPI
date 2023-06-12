@@ -78,4 +78,4 @@ jobs:
 
     - name: Deploy WebAPI with MSDeploy
       run: |
-        "./msdeploy.exe" -verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule
+        ".\msdeploy.exe" -verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule
