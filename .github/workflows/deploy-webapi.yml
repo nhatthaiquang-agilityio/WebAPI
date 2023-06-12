@@ -75,6 +75,6 @@ jobs:
     - name: Deploy WebAPI with MSDeploy
       shell: powershell
       run: |
-        ./msdeploy.exe -verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule
-      env:
-        working-directory: 'C:\Program Files\IIS\Microsoft Web Deploy V3\'
+        $MsDeploy = 'C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe';
+        $ArgumentList = '-verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule';
+        Start-Process -FilePath $MsDeploy -ArgumentList $ArgumentList -Wait -NoNewWindow;
