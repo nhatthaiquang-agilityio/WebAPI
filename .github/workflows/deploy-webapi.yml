@@ -72,6 +72,10 @@ jobs:
         name: ${{ inputs.artifact-name }}
         path: ${{ env.physical_path }}
 
+    - name: Change directory
+      run: |
+        cd "C:\Program Files\IIS\Microsoft Web Deploy V3\"
+
     - name: Deploy WebAPI with MSDeploy
       run: |
-        "C:\Program Files\IIS\Microsoft Web Deploy V3\msdeploy.exe" -verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule
+        ./msdeploy -verb:sync -source:iisApp=`"${{ env.physical_path }}\WebAPI`" -dest:iisApp=`"Default Web Site\webapi`" -enableRule:DoNotDeleteRule
